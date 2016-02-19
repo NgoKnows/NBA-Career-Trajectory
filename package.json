@@ -1,0 +1,67 @@
+{
+  "name": "nba-career-trajectory",
+  "version": "1.0.0",
+  "description": "A visualization comparing the statistics of nba players past and present",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.babel.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NgoKnows/NBA-Career-Trajectory.git"
+  },
+  "keywords": [
+    "nba",
+    "viz",
+    "visualization"
+  ],
+  "author": "Alex Ngo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NgoKnows/NBA-Career-Trajectory/issues"
+  },
+  "homepage": "https://github.com/NgoKnows/NBA-Career-Trajectory#readme",
+  "dependencies": {
+    "bluebird": "^3.3.1",
+    "d3": "^3.5.15",
+    "immutable": "^3.7.6",
+    "koa": "^1.1.2",
+    "koa-morgan": "^0.4.0",
+    "koa-router": "^5.4.0",
+    "loading-svg": "^1.0.0",
+    "lodash": "^4.3.0",
+    "radium": "^0.16.6",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "react-redux": "^4.4.0",
+    "react-select": "^1.0.0-beta9",
+    "redux": "^3.3.1",
+    "redux-immutablejs": "0.0.8",
+    "redux-thunk": "^1.0.3",
+    "superagent": "^1.7.2",
+    "superagent-bluebird-promise": "^3.0.0",
+    "triejs": "^0.1.5"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.5.2",
+    "babel-loader": "^6.2.2",
+    "babel-polyfill": "^6.5.0",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-react-hmre": "^1.1.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "css-loader": "^0.23.1",
+    "file-loader": "^0.8.5",
+    "koa-static": "^2.0.0",
+    "koa-webpack-dev-middleware": "^1.1.0",
+    "koa-webpack-hot-middleware": "^1.0.3",
+    "redux-devtools": "^3.1.1",
+    "redux-devtools-dock-monitor": "^1.0.1",
+    "redux-devtools-log-monitor": "^1.0.4",
+    "style-loader": "^0.13.0",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.12.13"
+  }
+}
