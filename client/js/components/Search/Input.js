@@ -3,7 +3,8 @@ import Radium from 'radium'
 
 class Input extends Component {
     render() {
-        const { actions, value, toggleFocused } = this.props;
+        const { actions, value } = this.props;
+
         return (
             <div>
                 <input
@@ -30,14 +31,15 @@ const STYLES = {
     outline         : 0,
     padding         : '0.5rem 1rem',
     width           : '100%',
-    fontFamily: 'Lato, Serif',
+    fontFamily      : 'Lato, Serif',
     ':focus' : {
         outline      : 'none',
         borderRadius : '4px 4px 0 0'
     }
 };
 
-Input.propTypes = {};
-Input.defaultProps = {};
+Input.propTypes = {
+    value : PropTypes.string
+};
 
 export default Radium(Input);

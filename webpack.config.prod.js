@@ -17,6 +17,8 @@ module.exports = {
             containers: path.join(ROOT_DIR, 'client', 'js', 'containers'),
             flux: path.join(ROOT_DIR, 'client', 'js', 'redux'),
             js: path.join(ROOT_DIR, 'client', 'js'),
+            images: path.join(ROOT_DIR, 'client', 'images'),
+            d3: path.join(ROOT_DIR, 'client', 'js', 'd3'),
         }
     },
 
@@ -51,6 +53,12 @@ module.exports = {
                     "presets": ["es2015", "react", "stage-0"]
                 }
             },
+
+            {
+                test: /\.(jpg|png|woff|woff2|eot|ttf|svg|otf|pdf)$/,
+                loader: 'url-loader?limit=10000'
+            },
+
             {
                 test: /\.css$/,
                 loader: "style-loader!css-loader"

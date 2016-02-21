@@ -1,12 +1,20 @@
 import { SET_SEARCH_TERM, ADD_PLAYER, REMOVE_PLAYER,
-    SET_SUGGESTIONS, TOGGLE_AUTO_COMPLETE, TOGGLE_LOADING } from './constants'
+    SET_SUGGESTIONS, SET_CATEGORY, SET_FORMAT,
+    TOGGLE_AUTO_COMPLETE, TOGGLE_LOADING } from './constants'
 
 import request from 'superagent-bluebird-promise'
-import { test } from 'd3/index'
+import { update } from 'd3/index'
 
 
-// Actions
+// Search Actions
 // --------------------------------------------------
+export function setSuggestions(suggestions) {
+    return {
+        type: SET_SUGGESTIONS,
+        suggestions
+    }
+}
+
 export function setSearchTerm(searchTerm) {
     return {
         type: SET_SEARCH_TERM,
@@ -14,6 +22,8 @@ export function setSearchTerm(searchTerm) {
     }
 }
 
+// Player Actions
+// --------------------------------------------------
 export function addPlayer(player) {
     return {
         type: ADD_PLAYER,
@@ -28,13 +38,24 @@ export function removePlayer(id) {
     }
 }
 
-export function setSuggestions(suggestions) {
+// Graph Actions
+// --------------------------------------------------
+export function setCategory(category) {
     return {
-        type: SET_SUGGESTIONS,
-        suggestions
+        type: SET_CATEGORY,
+        category
     }
 }
 
+export function setFormat(format) {
+    return {
+        type: SET_FORMAT,
+        format
+    }
+}
+
+// UI Actions
+// --------------------------------------------------
 export function toggleAutoComplete(show) {
     return {
         type: TOGGLE_AUTO_COMPLETE,
@@ -53,23 +74,29 @@ export function toggleLoading(loading) {
 // --------------------------------------------------
 export function getSuggestions() {
     return (dispatch, getState) => {
-        console.log('here')
-        const searchTerm = getState().get('searchTerm');
+        const searchTerm = getState().getIn(['search', 'searchTerm']);
         request
-            .get(`/api/players/${searchTerm || '!'}`)
+            .get(`/api/search/${searchTerm || '!'}`)
             .then((res) => dispatch(setSuggestions(res.body)));
     }
 }
 
-//export function addPlayer(player) {
-//    return (dispatch, getState) => {
-//        dispatch(getPlayerStats(player))
-//    }
-//}
+export function addPlayerThunk(player) {
+    return (dispatch, getState) => {
+        dispatch(getPlayerStats(player))
+    }
+}
+
+export function removePlayerThunk(id) {
+    return (dispatch, getState) => {
+        dispatch(removePlayer(id));
+    }
+}
 
 export function getPlayerStats(player) {
     return (dispatch, getState) => {
         dispatch(toggleLoading(true));
+        dispatch(toggleAutoComplete(false));
         request
             .get(`/api/player/${player.id}`)
             .then(((res) => {
@@ -81,16 +108,6 @@ export function getPlayerStats(player) {
 
                 dispatch(addPlayer(playerStats));
                 dispatch(toggleLoading(false));
-                const players = getState().get('players').toJS()
-                test(players)
             }));
-    }
-}
-
-export function removePlayerGraph(id) {
-    return (dispatch, getState) => {
-        dispatch(removePlayer(id));
-        const players = getState().get('players').toJS()
-        test(players)
     }
 }

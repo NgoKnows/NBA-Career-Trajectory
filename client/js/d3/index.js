@@ -1,18 +1,14 @@
-import { formatStatsSeasonNumber } from './formatting'
+import { formatStats } from './formatting'
+import { TEAM_COLORS } from './constants'
+import _ from 'lodash'
+import moment from 'moment'
 
-let viz;
+console.log(TEAM_COLORS)
 
-let data = [
-    {
-        name: "Steph Curry",
-        seasons: [{"season":0,"stat":1399},{"season":1,"stat":2772},{"season":2,"stat":3155},{"season":3,"stat":4941},{"season":4,"stat":6814},{"season":5,"stat":8714},{"season":6,"stat":10203}]
-    },
-    {
-        name: "Blake Griffin",
-        seasons: [{"season": 0, "stat": 1845},{"season": 1, "stat": 3213}, {"season": 2, "stat": 4653}, {"season": 3, "stat": 6583}, {"season": 4, "stat": 8052}, {"season": 5, "stat": 8749}]
-    }
-];
-
+//const formatting = {
+//    season : formatStatsBySeason,
+//    age : formatStatsByAge
+//}
 const WIDTH = 1000;
 const HEIGHT = 500;
 const MARGINS = {
@@ -22,69 +18,140 @@ const MARGINS = {
     left: 50
 };
 
-const yMax = d3.max(data, (player) => {
-    return d3.max(player.seasons, (season) => season.stat)
-})
-
-const yMin = 0;
-
-// Scaling
+// Beginning Scaling
 // --------------------------------------------------
-const xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 8]);
-const yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([yMin, yMax]);
+let xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 10]);
+let yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 10000]);
 
 // Draw Axis
 // --------------------------------------------------
-const xAxis = d3.svg.axis()
+let xAxis = d3.svg.axis()
     .scale(xScale)
 
-const yAxis = d3.svg.axis()
+let yAxis = d3.svg.axis()
     .scale(yScale)
     .orient("left");
 
-export function start() {
-    viz = d3.select('#viz');
+export function init() {
+    const viz = d3.select('#viz');
 
     viz.append("svg:g")
         .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-        .attr("class", "axis")
+        .attr("class", "x axis")
         .call(xAxis);
 
     viz.append("svg:g")
         .attr("transform", "translate(" + MARGINS.left + ",0)")
-        .attr("class", "axis")
+        .attr("class", "y axis")
         .call(yAxis);
 }
 
-// Draw Lines
+// Update Data
 // --------------------------------------------------
-const lineGen = d3.svg.line()
-    .x((d) => xScale(d.season))
-    .y((d) => yScale(d.stat))
+export function update(playerStats, format, category) {
+    const viz = d3.select('#viz');
+
+    // Get data formatted
+    // ----------------------------------------------
+    const data = playerStats.map((player) => {
+        return formatStats(player, category);
+    })
+
+    // Get domain
+    // ----------------------------------------------
+    const maxStat = d3.max(data, (player) => {
+        return d3.max(player.seasons, (season) => season.stat)
+    })
+
+    const maxFormat = d3.max(data, (player) => {
+        return d3.max(player.seasons, (season) => season[format]);
+    });
+    const minFormat = d3.min(data, (player) => {
+        return d3.min(player.seasons, (season) => season[format]);
+    });
 
 
-export function test(players) {
-    const data = [];
-    for (let i = 0; i < players.length; i++) {
-        const player = players[i];
-        data.push(formatStatsSeasonNumber(player.name, player.stats, 'PTS'))
+    let domain;
+    if (format === 'year') {
+        //1990-91
+        //2005-2006
+        let year = minFormat;
+        domain = [minFormat];
+        console.log(minFormat, maxFormat)
+        while (year !== maxFormat) {
+            const nextYear = moment([year.substring(0, 4)]).add(1, 'year');
+            const nextNextYear = moment([year.substring(0, 4)]).add(2, 'year');
+            const newYear = nextYear.format('YYYY')+ '-' + nextNextYear.format('YY');
+            year = newYear;
+            domain.push(newYear);
+        }
+        //console.log(domain)
+    } else {
+        domain = _.range(minFormat, maxFormat + 1);
+
     }
 
-    const playerss = viz.selectAll(".player")
-        .data(data);
+    // Scaling
+    // ----------------------------------------------
+    xScale = d3.scale.ordinal().rangePoints([MARGINS.left, WIDTH - MARGINS.right]).domain(domain);
+    yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, maxStat]);
 
-    const playersEnter = playerss.enter()
+    let lineGen = d3.svg.line()
+        .x((d) => xScale(d[format]))
+        .y((d) => yScale(d.stat))
+
+    // Draw Axis
+    // ----------------------------------------------
+    if (data.length) {
+        xAxis = d3.svg.axis()
+            .scale(xScale)
+
+        yAxis = d3.svg.axis()
+            .scale(yScale)
+            .orient("left");
+
+        viz.selectAll("g.x.axis")
+            .transition().delay(100).duration(1000)
+            .call(xAxis)
+            .selectAll("text")
+            .attr("dy", ".35em")
+            .attr("transform", "rotate(45)")
+
+        viz.selectAll("g.y.axis")
+            .transition().delay(100).duration(1000)
+            .call(yAxis);
+
+    }
+
+    // Draw Paths
+    // ----------------------------------------------
+    const players = viz.selectAll(".player path")
+        .data(data, (d) => d.id + d.category);
+
+    players.exit().transition().duration(1000).style("opacity", 0).remove();
+
+    players
+        .transition().duration(1000)
+        .attr('d', (d) => {
+            return lineGen(d.seasons)
+        })
+        .attr("stroke-dasharray", () => console.log());
+
+    const playersEnter = players.enter()
         .append("g")
         .attr("class", "player");
 
     const path = playersEnter.append("path")
-        .attr('d', (d) => lineGen(d.seasons))
+        .attr('d', (d) => {
+            return lineGen(d.seasons)
+        })
         .attr("class", "line")
-        .style("stroke", 'red')
+        .style("stroke", (d) => {
+            let counts = (_.countBy(d.seasons, (season) => season.team));
+            return TEAM_COLORS[Object.keys(counts).reduce(function(a, b){ return counts[a] > counts[b] ? a : b })];
+        })
         .attr('stroke-width', 3)
         .attr('fill', 'none');
-
-    playerss.exit().remove();
 
     if (path.node()) {
         const totalLength = path.node().getTotalLength();
@@ -98,27 +165,35 @@ export function test(players) {
             .attr("stroke-dashoffset", 0);
     }
 
-// Draw Points
-// --------------------------------------------------
+    // Draw Points
+    // ----------------------------------------------
     const dots = viz.selectAll("g.dot")
-        .data(data)
+        .data(data, (d) => d.id + d.category);
 
-    const a = dots.enter()
+    dots.exit().remove();
+
+    const dotsEnter = dots.enter()
         .append("g")
         .attr("class", "dot")
         .selectAll("circle")
         .data((d) => d.seasons)
 
-    const b = a
+    console.log(viz.selectAll("g.dot circle"));
+    viz.selectAll("g.dot circle")
+        .transition().duration(1000)
+        .attr("cx", (d, i) => {
+            return xScale(d[format])
+        })
+        .attr("cy", (d, i) => yScale(d.stat));
+
+    dotsEnter
         .enter().append("circle")
         .attr("r", 4)
-        .attr("cx", (d, i) => xScale(d.season))
-        .attr("cy", (d, i) => yScale(d.stat))
-        .attr("fill", 'white')
-        .style("stroke", 'red');
-
-    dots.exit().remove();
-
+        .attr("fill", (d) => TEAM_COLORS[d.team])
+        .style("stroke", (d) => TEAM_COLORS[d.team])
+        .transition().duration(10000)
+        .attr("cx", (d, i) => xScale(d[format]))
+        .attr("cy", (d, i) => yScale(d.stat));
 }
 
 

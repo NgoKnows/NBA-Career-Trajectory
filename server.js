@@ -49,7 +49,6 @@ app.use(function *(next) {
 
 // Logging
 // --------------------------------------------------
-import fs from 'fs'
 import morgan from 'koa-morgan'
 
 app.use(morgan.middleware('combined'));
@@ -63,7 +62,7 @@ import router from 'koa-router'
 let myRouter = router();
 
 myRouter
-    .get('/api/players/:searchTerm', playerAPI.getPlayers)
+    .get('/api/search/:searchTerm', playerAPI.getPlayers)
     .get('/api/player/:id', playerAPI.getPlayer);
 
 app

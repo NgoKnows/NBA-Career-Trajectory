@@ -2,7 +2,9 @@ import Trie from 'triejs'
 import request from 'superagent-bluebird-promise'
 import playerJSON from '../data/player.json'
 
+//Create a new trie
 const PlayerTrie = new Trie({
+    //sort by active players first
     sort: function() {
         this.sort((a, b) => {
             if (a.active && !b.active) {
@@ -16,6 +18,7 @@ const PlayerTrie = new Trie({
     }
 });
 
+//add players to trieeee
 for (let playerName in playerJSON) {
     PlayerTrie.add(playerName,
         {
@@ -26,17 +29,19 @@ for (let playerName in playerJSON) {
     );
 }
 
+//gets autocomplete results for term
 export function *getPlayers() {
     this.status = 200;
     let players = PlayerTrie.find(this.params.searchTerm) || [];
 
-    if (players.length > 8) {
-        players = players.slice(0, 6);
+    if (players.length > 4) {
+        players = players.slice(0, 4);
     }
 
     this.body = players;
 }
 
+//gets season totals for player by id
 export function *getPlayer() {
     const stats = yield request
         .get(`http://stats.nba.com/stats/playerprofilev2?PerMode=Totals&PlayerID=${this.params.id}`)
@@ -45,6 +50,3 @@ export function *getPlayer() {
     this.status = 200;
     this.body = stats;
 }
-
-
-

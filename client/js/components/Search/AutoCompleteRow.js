@@ -3,12 +3,16 @@ import Radium from 'radium'
 
 class AutoCompleteRow extends Component {
     render() {
-        const { actions, id, name, empty } = this.props;
+        const { actions, id, name, empty, disabled } = this.props;
 
         return (
-            <div onClick={() => actions.getPlayerStats({id, name})}>
+            <div>
                 { !empty ?
-                    <div style={STYLES.row} key={id}>
+                    <div
+                        style={[STYLES.row, STYLES.disabled(disabled)]}
+                        key={id}
+                        onClick={() => !disabled ? actions.getPlayerStats({id, name}) : null}
+                    >
                         <div style={STYLES.imageContainer}>
                             <img
                                 style={STYLES.image}
@@ -41,7 +45,6 @@ const STYLES = {
     row: {
         display: 'flex',
         alignItems: 'center',
-        //borderStyle: 'none none solid none',
         ':hover': {
             opacity: 0.5,
             cursor: 'pointer'
@@ -50,10 +53,27 @@ const STYLES = {
 
     empty: {
         padding: '0.5rem'
+    },
+
+    disabled: (disabled) => {
+        if (disabled) {
+            return {
+                opacity: '0.3',
+                ':hover': {
+                    opacity: '0.3',
+                    cursor: 'not-allowed'
+                }
+            }
+        } else {
+            return {};
+        }
     }
 };
 
-AutoCompleteRow.propTypes = {};
-AutoCompleteRow.defaultProps = {};
+AutoCompleteRow.propTypes = {
+    id    : PropTypes.string,
+    name  : PropTypes.string,
+    empty : PropTypes.bool
+};
 
 export default Radium(AutoCompleteRow);
