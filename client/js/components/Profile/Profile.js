@@ -3,15 +3,15 @@ import Radium from 'radium'
 
 class Profile extends Component {
     render() {
-        const { id } = this.props
+        const { player } = this.props
         return (
             <div style={STYLES.container}>
                 <div style={STYLES.profileContainer}>
                     <img
                         style={STYLES.image}
-                        src={`http://stats.nba.com/media/players/230x185/${id}.png`}
+                        src={`http://stats.nba.com/media/players/230x185/${player.get('id')}.png`}
                     />
-                    <div style={STYLES.name}>Stephen Curry</div>
+                    <div style={STYLES.name}>{player.get('name')}</div>
                 </div>
             </div>
         );

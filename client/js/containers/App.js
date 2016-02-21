@@ -10,6 +10,7 @@ import Profile from 'components/Profile/Profile'
 import LoadingIcon from 'components/LoadingIcon'
 
 import { init, update } from 'd3/index.js'
+import { INCLUDED_CATEGORIES } from 'd3/constants'
 
 import * as actions from 'flux/actions'
 
@@ -24,13 +25,15 @@ class App extends Component {
             update(nextProps.players.toJS(), format, category);
         } else if (this.props.format !== nextProps.format) {
             update(players.toJS(), nextProps.format, category);
+        } else if (this.props.category !== nextProps.category) {
+            update(players.toJS(), format, nextProps.category);
         }
     }
 
     render() {
         const { actions, players, searchTerm,
             suggestions, autoComplete, loading,
-            category, format} = this.props;
+            category, format, hoveringPlayer } = this.props;
 
         return (
             <div
@@ -46,12 +49,18 @@ class App extends Component {
                         players={players}
                     />
                     <Chips actions={actions} players={players}/>
-                    <Profile id={201939}/>
+                    {hoveringPlayer.size ? <Profile player={hoveringPlayer}/> : null}
                 </div>
                 <div>
                     <Tabs actions={actions} format={format}/>
                     {loading ? <LoadingIcon /> : null}
                     <svg id="viz" width="1000" height="500" />
+                    <select value={category} onChange={(v) => actions.setCategory(v.target.value)}>
+                        {INCLUDED_CATEGORIES.map((v) => {
+                            return <option value={v}>{v}</option>
+                        })}
+                    </select>
+
                 </div>
             </div>
         );
@@ -82,6 +91,7 @@ function mapStateToProps(state) {
         suggestions  : state.getIn(['search', 'suggestions']),
         autoComplete : state.getIn(['ui', 'autoComplete']),
         loading      : state.getIn(['ui', 'loading']),
+        hoveringPlayer  : state.getIn(['ui', 'hoveringPlayer']),
         players      : state.get('players'),
         category     : state.getIn(['graph', 'category']),
         format       : state.getIn(['graph', 'format'])

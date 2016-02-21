@@ -126,7 +126,7 @@ export function update(playerStats, format, category) {
     // Draw Paths
     // ----------------------------------------------
     const players = viz.selectAll(".player path")
-        .data(data, (d) => d.id + d.category);
+        .data(data, (d) => d.id);
 
     players.exit().transition().duration(1000).style("opacity", 0).remove();
 
@@ -135,7 +135,7 @@ export function update(playerStats, format, category) {
         .attr('d', (d) => {
             return lineGen(d.seasons)
         })
-        .attr("stroke-dasharray", () => console.log());
+        .attr("stroke-dasharray", () => {});
 
     const playersEnter = players.enter()
         .append("g")
@@ -168,7 +168,7 @@ export function update(playerStats, format, category) {
     // Draw Points
     // ----------------------------------------------
     const dots = viz.selectAll("g.dot")
-        .data(data, (d) => d.id + d.category);
+        .data(data, (d) => d.id);
 
     dots.exit().remove();
 
@@ -176,15 +176,10 @@ export function update(playerStats, format, category) {
         .append("g")
         .attr("class", "dot")
         .selectAll("circle")
-        .data((d) => d.seasons)
+        .data((d) => d.seasons, (d, i) => d.id + ' ' + i)
 
-    console.log(viz.selectAll("g.dot circle"));
-    viz.selectAll("g.dot circle")
-        .transition().duration(1000)
-        .attr("cx", (d, i) => {
-            return xScale(d[format])
-        })
-        .attr("cy", (d, i) => yScale(d.stat));
+    //console.log('entering ', dotsEnter);
+    //console.log(viz.selectAll("g.dot circle"));
 
     dotsEnter
         .enter().append("circle")
@@ -194,6 +189,21 @@ export function update(playerStats, format, category) {
         .transition().duration(10000)
         .attr("cx", (d, i) => xScale(d[format]))
         .attr("cy", (d, i) => yScale(d.stat));
+
+    console.log(viz.selectAll("g.dot"));
+    console.log(viz.selectAll("g.dot circle"));
+    console.log(viz.selectAll("g.dot").selectAll("circle").data((d) => {
+        console.log(d)
+        return d.seasons;
+    }));
+
+    viz.selectAll("g.dot circle")
+        .transition().duration(1000)
+        .attr("cx", (d, i) => {
+            return xScale(d[format])
+        })
+        .attr("cy", (d, i) => yScale(d.stat));
+
 }
 
 

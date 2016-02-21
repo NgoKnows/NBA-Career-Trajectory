@@ -1,6 +1,6 @@
 import { SET_SEARCH_TERM, ADD_PLAYER, REMOVE_PLAYER,
     SET_SUGGESTIONS, SET_CATEGORY, SET_FORMAT,
-    TOGGLE_AUTO_COMPLETE, TOGGLE_LOADING } from './constants'
+    TOGGLE_AUTO_COMPLETE, TOGGLE_LOADING, SET_HOVERING_PLAYER } from './constants'
 
 import request from 'superagent-bluebird-promise'
 import { update } from 'd3/index'
@@ -67,6 +67,13 @@ export function toggleLoading(loading) {
     return {
         type: TOGGLE_LOADING,
         loading
+    }
+}
+
+export function setHoveringPlayer(player) {
+    return {
+        type: SET_HOVERING_PLAYER,
+        player
     }
 }
 

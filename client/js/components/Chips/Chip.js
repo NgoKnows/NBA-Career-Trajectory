@@ -30,8 +30,9 @@ class Chip extends Component {
     }
 
     handleMouseOver() {
-        const { id, name } = this.props;
+        const { id, name, actions } = this.props;
 
+        actions.setHoveringPlayer({id, name});
         d3.selectAll('.player')
             .classed('notSelected', (player) =>  player.name !== name )
         d3.selectAll('g.dot')
@@ -39,6 +40,10 @@ class Chip extends Component {
     }
 
     handleMouseOut() {
+        const { id, name, actions } = this.props;
+
+        actions.setHoveringPlayer({});
+
         d3.selectAll('.player')
             .classed('notSelected', (b) => false )
         d3.selectAll('g.dot')

@@ -1,6 +1,6 @@
 import { SET_SEARCH_TERM, ADD_PLAYER, REMOVE_PLAYER,
     SET_SUGGESTIONS, TOGGLE_AUTO_COMPLETE, TOGGLE_LOADING,
-    SET_FORMAT, SET_CATEGORY} from './constants'
+    SET_FORMAT, SET_CATEGORY, SET_HOVERING_PLAYER} from './constants'
 
 import { combineReducers } from 'redux-immutablejs'
 import Immutable from 'immutable'
@@ -68,7 +68,8 @@ function graph(state = graphState, action) {
 // --------------------------------------------------
 let uiState = Immutable.Map({
     autoComplete: false,
-    loading: false
+    loading: false,
+    hoveringPlayer: Immutable.Map()
 });
 function ui(state = uiState, action) {
     switch(action.type) {
@@ -77,6 +78,9 @@ function ui(state = uiState, action) {
 
         case TOGGLE_LOADING:
             return state.set('loading', action.loading);
+
+        case SET_HOVERING_PLAYER:
+            return state.set('hoveringPlayer', Immutable.Map(action.player))
 
         default:
             return state;

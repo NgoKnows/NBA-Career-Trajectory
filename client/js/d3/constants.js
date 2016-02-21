@@ -28,6 +28,25 @@ export const CATEGORIES  = [
     "PTS"
 ];
 
+export const INCLUDED_CATEGORIES = [
+    "GP",
+    "GS",
+    "MIN",
+    "FGM",
+    "FGA",
+    "FG3M",
+    "FG3A",
+    "FTM",
+    "FTA",
+    "REB",
+    "AST",
+    "STL",
+    "BLK",
+    "TOV",
+    "PF",
+    "PTS"
+]
+
 export const TEAM_COLORS = {
     ATL: '#E03A3E',
     BKN: '#061922',
@@ -58,6 +77,7 @@ export const TEAM_COLORS = {
     SAS: '#061922',
     TOR: '#CE1141',
     UTA: '#002B5C',
+    UTH: '#002B5C',
     WAS: '#E31937',
     NOJ: '#002B5C',
     CHH: '#008CA8'
