@@ -19,7 +19,4 @@ const STYLES = {
     top: '35%'
 };
 
-LoadingIcon.propTypes = {};
-LoadingIcon.defaultProps = {};
-
 export default Radium(LoadingIcon);

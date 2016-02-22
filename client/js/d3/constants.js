@@ -29,23 +29,42 @@ export const CATEGORIES  = [
 ];
 
 export const INCLUDED_CATEGORIES = [
-    "GP",
-    "GS",
-    "MIN",
-    "FGM",
-    "FGA",
-    "FG3M",
-    "FG3A",
-    "FTM",
-    "FTA",
+    "PTS",
     "REB",
     "AST",
     "STL",
     "BLK",
     "TOV",
     "PF",
-    "PTS"
+    "FGM",
+    "FGA",
+    "FG3M",
+    "FG3A",
+    "FTM",
+    "FTA",
+    "GP",
+    "GS",
+    "MIN",
 ]
+
+export const CATEGORY_TO_NAME = {
+    PTS  : "Points",
+    REB  : "Rebounds",
+    AST  : "Assists",
+    STL  : "Steals",
+    BLK  : "Blocks",
+    TOV  : "Turnovers",
+    PF   : "Personal Fouls",
+    FGM  : "Field Goals Made",
+    FGA  : "Field Goals Attempted",
+    FG3M : "3-Point Field Goals Made",
+    FG3A : "3-Point Field Goals Attempted",
+    FTM  : "Free Throws Made",
+    FTA  : "Free Throws Attempted",
+    GP   : "Games Played",
+    GS   : "Games Started",
+    MIN  : "Minutes Played"
+}
 
 export const TEAM_COLORS = {
     ATL: '#E03A3E',
@@ -82,8 +101,13 @@ export const TEAM_COLORS = {
     NOJ: '#002B5C',
     CHH: '#008CA8',
     NOK: '#008CA8',
+    NOH: '#008CA8',
     SEA: '#016332',
-    STL: '#E03A3E'
+    STL: '#E03A3E',
+    GOL: '#FDB927',
+    PHL: '#006BB6',
+    SFW: '#FDB927'
+
 }
 
 const map = new Map();
@@ -91,6 +115,6 @@ for (let i = 0; i < CATEGORIES.length; i++) {
     map.set(CATEGORIES[i], i);
 };
 
-export const CATEGORY_LOOKUP = map;
+export const CATEGORY_TO_INDEX = map;
 
 

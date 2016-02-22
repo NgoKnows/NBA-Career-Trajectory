@@ -7,7 +7,7 @@ class Tab extends Component {
 
         return (
             <div onClick={handleClick} style={[STYLES.container, STYLES.active(active)]}>
-                {name}
+                <span>{name}</span>
                 <div style={[STYLES.underline, STYLES.activeUnderline(active)]} />
             </div>
         );
@@ -51,7 +51,10 @@ const STYLES = {
     }
 };
 
-Tab.propTypes = {};
-Tab.defaultProps = {};
+Tab.propTypes = {
+    name: PropTypes.string.isRequired,
+    active: PropTypes.bool.isRequired,
+    handleClick: PropTypes.func.isRequired
+};
 
 export default Radium(Tab);

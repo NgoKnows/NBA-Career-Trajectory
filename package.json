@@ -42,7 +42,8 @@
     "redux-thunk": "^1.0.3",
     "superagent": "^1.7.2",
     "superagent-bluebird-promise": "^3.0.0",
-    "triejs": "^0.1.5"
+    "triejs": "^0.1.5",
+    "velocity-react": "^1.1.3"
   },
   "devDependencies": {
     "babel": "^6.5.2",

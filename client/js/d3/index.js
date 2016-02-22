@@ -13,23 +13,23 @@ const MARGINS = {
     left: 50
 };
 
-// Beginning Scaling
-// --------------------------------------------------
-let xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 10]);
-let yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 10000]);
-
-// Draw Axis
-// --------------------------------------------------
-let xAxis = d3.svg.axis()
-    .scale(xScale)
-
-let yAxis = d3.svg.axis()
-    .scale(yScale)
-    .orient("left");
-
 export function init(actions) {
     const viz = d3.select('#viz');
     reduxActions = actions;
+
+    // Beginning Scaling
+    // --------------------------------------------------
+    const xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 10]);
+    const yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 10000]);
+
+   // Draw Axis
+   // --------------------------------------------------
+    const xAxis = d3.svg.axis()
+        .scale(xScale)
+
+    const yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left");
 
     viz.append("svg:g")
         .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
@@ -49,9 +49,7 @@ export function update(playerStats, format, category) {
 
     // Get data formatted
     // ----------------------------------------------
-    const data = playerStats.map((player) => {
-        return formatStats(player, category);
-    })
+    const data = playerStats.map((player) => formatStats(player, category));
 
     // Get domain
     // ----------------------------------------------
@@ -62,6 +60,7 @@ export function update(playerStats, format, category) {
     const maxFormat = d3.max(data, (player) => {
         return d3.max(player.seasons, (season) => season[format]);
     });
+
     const minFormat = d3.min(data, (player) => {
         return d3.min(player.seasons, (season) => season[format]);
     });
@@ -84,8 +83,8 @@ export function update(playerStats, format, category) {
 
     // Scaling
     // ----------------------------------------------
-    xScale = d3.scale.ordinal().rangePoints([MARGINS.left, WIDTH - MARGINS.right]).domain(domain);
-    yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, maxStat]);
+    const xScale = d3.scale.ordinal().rangePoints([MARGINS.left, WIDTH - MARGINS.right]).domain(domain);
+    const yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, maxStat]);
 
     let lineGen = d3.svg.line()
         .x((d) => xScale(d[format]))
@@ -94,10 +93,10 @@ export function update(playerStats, format, category) {
     // Draw Axis
     // ----------------------------------------------
     if (data.length) {
-        xAxis = d3.svg.axis()
+        const xAxis = d3.svg.axis()
             .scale(xScale)
 
-        yAxis = d3.svg.axis()
+        const yAxis = d3.svg.axis()
             .scale(yScale)
             .orient("left");
 
@@ -107,22 +106,12 @@ export function update(playerStats, format, category) {
             .selectAll("text")
             .attr("dy", ".35em")
             .attr("transform", (d) => {
-                console.log(format, domain.length)
                 if (format === 'year' && domain.length > 12) {
                     return "rotate(50)" + " translate(30," + 0 + ")";
                 } else {
                     return "rotate(0)" + " translate(0," + 10 + ")";
                 }
-            })
-            //.attr("transform", (d) => {
-            //    if (format === 'year' && domain.length > 12) {
-            //        return "translate(0," + 10 + ")"
-            //    } else {
-            //        return "translate(0, 0)";
-            //    }
-            //});
-
-
+            });
 
         viz.selectAll("g.y.axis")
             .transition().delay(100).duration(1000)
@@ -177,7 +166,7 @@ export function update(playerStats, format, category) {
         })
 
 
-            //animate line drawing
+    //animate line drawing
     if (path.node()) {
         const totalLength = path.node().getTotalLength();
 
@@ -230,7 +219,7 @@ export function update(playerStats, format, category) {
         })
 
 
-    const realDots = viz.selectAll("g.dot").selectAll("circle").data((d) => {
+    viz.selectAll("g.dot").selectAll("circle").data((d) => {
         return d.seasons;
     });
 

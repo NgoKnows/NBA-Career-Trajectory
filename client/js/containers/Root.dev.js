@@ -10,7 +10,6 @@ export default class Root extends Component {
             <Provider store={this.props.store} >
                 <div>
                     <App />
-                    <DevTools />
                 </div>
             </Provider>
         )

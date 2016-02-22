@@ -10,7 +10,6 @@ import Profile from 'components/Profile/Profile'
 import LoadingIcon from 'components/LoadingIcon'
 import DropDown from 'components/DropDown'
 
-
 import { init, update } from 'd3/index.js'
 
 import * as actions from 'flux/actions'
@@ -22,6 +21,7 @@ class App extends Component {
 
     componentWillReceiveProps(nextProps) {
         const { players, category, format} = this.props;
+
         if (this.props.players !== nextProps.players) {
             update(nextProps.players.toJS(), format, category);
         } else if (this.props.format !== nextProps.format) {
@@ -49,7 +49,11 @@ class App extends Component {
                         value={searchTerm}
                         players={players}
                     />
-                    <Chips actions={actions} players={players}/>
+                    <Chips
+                        actions={actions}
+                        players={players}
+                        hoveringPlayer={hoveringPlayer}
+                    />
                     {hoveringPlayer.size ? <Profile player={hoveringPlayer}/> : null}
                 </div>
                 <div>
@@ -74,23 +78,26 @@ const STYLES = {
 }
 
 App.propTypes = {
-    searchTerm   : PropTypes.string,
-    suggestions  : ImmutablePropTypes.list,
-    players      : ImmutablePropTypes.list,
-    autoComplete : PropTypes.bool,
-    loading      : PropTypes.bool
+    autoComplete   : PropTypes.bool.isRequired,
+    category       : PropTypes.string.isRequired,
+    format         : PropTypes.string.isRequired,
+    hoveringPlayer : ImmutablePropTypes.map.isRequired,
+    loading        : PropTypes.bool.isRequired,
+    players        : ImmutablePropTypes.list.isRequired,
+    searchTerm     : PropTypes.string.isRequired,
+    suggestions    : ImmutablePropTypes.list.isRequired
 }
 
 function mapStateToProps(state) {
     return {
-        searchTerm   : state.getIn(['search', 'searchTerm']),
-        suggestions  : state.getIn(['search', 'suggestions']),
         autoComplete : state.getIn(['ui', 'autoComplete']),
-        loading      : state.getIn(['ui', 'loading']),
-        hoveringPlayer  : state.getIn(['ui', 'hoveringPlayer']),
-        players      : state.get('players'),
         category     : state.getIn(['graph', 'category']),
-        format       : state.getIn(['graph', 'format'])
+        format       : state.getIn(['graph', 'format']),
+        hoveringPlayer  : state.getIn(['ui', 'hoveringPlayer']),
+        loading      : state.getIn(['ui', 'loading']),
+        players      : state.get('players'),
+        searchTerm   : state.getIn(['search', 'searchTerm']),
+        suggestions  : state.getIn(['search', 'suggestions'])
     };
 }
 

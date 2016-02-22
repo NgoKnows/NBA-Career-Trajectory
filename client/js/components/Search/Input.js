@@ -39,7 +39,7 @@ const STYLES = {
 };
 
 Input.propTypes = {
-    value : PropTypes.string
+    value : PropTypes.string.isRequired
 };
 
 export default Radium(Input);

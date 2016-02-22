@@ -6,6 +6,7 @@ import Tab from './Tab'
 class Tabs extends Component {
     render() {
         const { format, actions } = this.props;
+
         return (
             <div style={STYLES.container}>
                 <Tab name="Season" active={format === "season"} handleClick={() => actions.setFormat('season')}/>
@@ -24,7 +25,8 @@ const STYLES = {
     }
 };
 
-Tabs.propTypes = {};
-Tabs.defaultProps = {};
+Tabs.propTypes = {
+    format : PropTypes.string.isRequired
+};
 
 export default Radium(Tabs);

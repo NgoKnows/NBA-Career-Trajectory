@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import Radium from 'radium'
 
 class Profile extends Component {
@@ -12,14 +13,13 @@ class Profile extends Component {
                         style={STYLES.image}
                         src={`http://stats.nba.com/media/players/230x185/${player.get('id')}.png`}
                     />
-                    {this.renderStats()}
+                    {this.renderStats(player)}
                 </div>
             </div>
         );
     }
-    renderStats() {
-        const { player } = this.props;
 
+    renderStats(player) {
         if (player.get('stats')) {
             return (
                 <div style={STYLES.stats}>
@@ -31,6 +31,9 @@ class Profile extends Component {
                     </div>
                     <div>
                         {player.get('stats').year + ' season'}
+                    </div>
+                    <div>
+                        {player.get('stats').statValue + ' ' + player.get('stats').category}
                     </div>
                 </div>
             );
@@ -70,7 +73,8 @@ const STYLES = {
     }
 };
 
-Profile.propTypes = {};
-Profile.defaultProps = {};
+Profile.propTypes = {
+    player: ImmutablePropTypes.map.isRequired
+};
 
 export default Radium(Profile);

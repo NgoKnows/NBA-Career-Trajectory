@@ -31,13 +31,13 @@ for (let playerName in playerJSON) {
 
 //gets autocomplete results for term
 export function *getPlayers() {
-    this.status = 200;
     let players = PlayerTrie.find(this.params.searchTerm) || [];
 
     if (players.length > 4) {
         players = players.slice(0, 4);
     }
 
+    this.status = 200;
     this.body = players;
 }
 

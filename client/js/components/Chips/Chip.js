@@ -3,11 +3,11 @@ import Radium from 'radium'
 
 class Chip extends Component {
     render() {
-        const { actions, id, name } = this.props;
+        const { actions, id, name, hovering } = this.props;
 
         return (
                 <div
-                    style={STYLES.container}
+                    style={[STYLES.container, STYLES.hovering(hovering)]}
                     onMouseOver={() => this.handleMouseOver()}
                     onMouseOut={() => this.handleMouseOut()}
                     key={id}
@@ -33,10 +33,11 @@ class Chip extends Component {
         const { id, name, actions } = this.props;
 
         actions.setHoveringPlayer({id, name});
+
         d3.selectAll('.player')
-            .classed('notSelected', (player) =>  player.name !== name )
+            .classed('notSelected', (player) =>  player.name !== name );
         d3.selectAll('g.dot')
-            .classed('notSelected', (player) =>  player.name !== name )
+            .classed('notSelected', (player) =>  player.name !== name );
     }
 
     handleMouseOut() {
@@ -45,21 +46,16 @@ class Chip extends Component {
         actions.setHoveringPlayer({});
 
         d3.selectAll('.player')
-            .classed('notSelected', (b) => false )
+            .classed('notSelected', (b) => false );
         d3.selectAll('g.dot')
-            .classed('notSelected', (player) =>  false )
+            .classed('notSelected', (player) =>  false );
     }
 
     handleRemoveClick() {
         const { actions, id } = this.props;
 
-        actions.removePlayerThunk(id)
-        actions.setHoveringPlayer({});
-
-        d3.selectAll('.player')
-            .classed('notSelected', (b) => false )
-        d3.selectAll('g.dot')
-            .classed('notSelected', (player) =>  false )
+        actions.removePlayerThunk(id);
+        this.handleMouseOut();
     }
 }
 
@@ -107,12 +103,22 @@ const STYLES = {
         marginRight: '15px',
         fontSize: '15px',
         color: 'grey'
+    },
+
+    hovering: (hovering) => {
+        if (hovering) {
+            return {
+                boxShadow: '0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15)',
+                fontWeight: 'bold'
+            }
+        }
     }
 };
 
 Chip.propTypes = {
-    name : PropTypes.string,
-    id   : PropTypes.string
+    name : PropTypes.string.isRequired,
+    id   : PropTypes.string.isRequired,
+    hovering: PropTypes.bool.isRequired
 };
 
 export default Radium(Chip);

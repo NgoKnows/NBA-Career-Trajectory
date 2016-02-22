@@ -24,7 +24,6 @@ class AutoComplete extends Component {
                     return player.id === suggestion.id;
                 });
 
-
                 return (
                     <AutoCompleteRow
                         disabled={index !== -1}
@@ -54,8 +53,8 @@ const STYLES = {
 };
 
 AutoComplete.propTypes = {
-    suggestions: ImmutablePropTypes.list,
-    players      : ImmutablePropTypes.list
+    suggestions: ImmutablePropTypes.list.isRequired,
+    players      : ImmutablePropTypes.list.isRequired
 };
 
 export default Radium(AutoComplete);

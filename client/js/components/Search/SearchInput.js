@@ -43,10 +43,10 @@ const STYLES = {
 };
 
 SearchInput.propTypes = {
-    value        : PropTypes.string,
-    autoComplete : PropTypes.bool,
-    suggestions  : ImmutablePropTypes.list,
-    players      : ImmutablePropTypes.list
+    value        : PropTypes.string.isRequired,
+    autoComplete : PropTypes.bool.isRequired,
+    suggestions  : ImmutablePropTypes.list.isRequired,
+    players      : ImmutablePropTypes.list.isRequired
 };
 
 export default Radium(SearchInput);

@@ -1,18 +1,21 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium'
 
-import { INCLUDED_CATEGORIES } from 'd3/constants'
+import { INCLUDED_CATEGORIES, CATEGORY_TO_NAME } from 'd3/constants'
 import Select from 'react-select'
 
-const options = INCLUDED_CATEGORIES.map((v) => {
+console.log(CATEGORY_TO_NAME)
+const options = INCLUDED_CATEGORIES.map((category) => {
     return {
-        value: v,
-        label: v
+        value: category,
+        label: CATEGORY_TO_NAME[category]
     }
 });
+
 class DropDown extends Component {
     render() {
         const { actions, category } = this.props;
+
         return (
             <div style={STYLES.container}>
                 <div style={STYLES.select}>
@@ -41,7 +44,8 @@ const STYLES = {
     }
 };
 
-DropDown.propTypes = {};
-DropDown.defaultProps = {};
+DropDown.propTypes = {
+    category: PropTypes.string.isRequired
+};
 
 export default Radium(DropDown);
