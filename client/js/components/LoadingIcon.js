@@ -15,7 +15,7 @@ class LoadingIcon extends Component {
 
 const STYLES = {
     position: 'absolute',
-    left: '50%',
+    left: '65%',
     top: '35%'
 };
 

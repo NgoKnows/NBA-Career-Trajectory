@@ -54,6 +54,7 @@ class Chip extends Component {
         const { actions, id } = this.props;
 
         actions.removePlayerThunk(id)
+        actions.setHoveringPlayer({});
 
         d3.selectAll('.player')
             .classed('notSelected', (b) => false )

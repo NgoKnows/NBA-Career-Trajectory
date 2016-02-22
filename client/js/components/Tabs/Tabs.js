@@ -20,7 +20,7 @@ const STYLES = {
     container: {
         display: 'flex',
         justifyContent: 'space-between',
-        margin: '30px 200px'
+        margin: '15px 200px'
     }
 };
 

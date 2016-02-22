@@ -8,15 +8,16 @@ import Chips from 'components/Chips/Chips'
 import Tabs from 'components/Tabs/Tabs'
 import Profile from 'components/Profile/Profile'
 import LoadingIcon from 'components/LoadingIcon'
+import DropDown from 'components/DropDown'
+
 
 import { init, update } from 'd3/index.js'
-import { INCLUDED_CATEGORIES } from 'd3/constants'
 
 import * as actions from 'flux/actions'
 
 class App extends Component {
     componentDidMount() {
-        init();
+        init(this.props.actions);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -52,15 +53,10 @@ class App extends Component {
                     {hoveringPlayer.size ? <Profile player={hoveringPlayer}/> : null}
                 </div>
                 <div>
-                    <Tabs actions={actions} format={format}/>
                     {loading ? <LoadingIcon /> : null}
-                    <svg id="viz" width="1000" height="500" />
-                    <select value={category} onChange={(v) => actions.setCategory(v.target.value)}>
-                        {INCLUDED_CATEGORIES.map((v) => {
-                            return <option value={v}>{v}</option>
-                        })}
-                    </select>
-
+                    <DropDown category={category} actions={actions}/>
+                    <svg id="viz" width="800" height="540" />
+                    <Tabs actions={actions} format={format}/>
                 </div>
             </div>
         );

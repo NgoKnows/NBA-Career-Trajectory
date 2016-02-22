@@ -18,7 +18,8 @@ export function formatStats(player, category) {
             year: stats[i][CATEGORY_LOOKUP.get("SEASON_ID")],
             team: stats[i][CATEGORY_LOOKUP.get("TEAM_ABBREVIATION")],
             stat,
-            id: player.id
+            id: player.id,
+            name: player.name
         });
     }
 

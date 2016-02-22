@@ -4,6 +4,7 @@ import Radium from 'radium'
 class Profile extends Component {
     render() {
         const { player } = this.props
+
         return (
             <div style={STYLES.container}>
                 <div style={STYLES.profileContainer}>
@@ -11,10 +12,31 @@ class Profile extends Component {
                         style={STYLES.image}
                         src={`http://stats.nba.com/media/players/230x185/${player.get('id')}.png`}
                     />
-                    <div style={STYLES.name}>{player.get('name')}</div>
+                    {this.renderStats()}
                 </div>
             </div>
         );
+    }
+    renderStats() {
+        const { player } = this.props;
+
+        if (player.get('stats')) {
+            return (
+                <div style={STYLES.stats}>
+                    <div style={STYLES.name}>
+                        {player.get('name')}
+                    </div>
+                    <div>
+                        {player.get('stats').team}
+                    </div>
+                    <div>
+                        {player.get('stats').year + ' season'}
+                    </div>
+                </div>
+            );
+        } else {
+            return <div style={STYLES.name}>{player.get('name')}</div>;
+        }
     }
 }
 
@@ -39,6 +61,12 @@ const STYLES = {
     name: {
         marginTop: '5px',
         fontSize: '24px'
+    },
+
+    stats: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
     }
 };
 

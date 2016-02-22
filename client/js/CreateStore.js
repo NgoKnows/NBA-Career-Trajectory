@@ -6,7 +6,7 @@ import Immutable from 'immutable'
 import DevTools from 'containers/DevTools'
 import Reducer from './redux/reducer'
 
-export default function composeStore(url) {
+export default function composeStore() {
 
     //always use thunk middleware
     let middleware = [applyMiddleware(thunk)];

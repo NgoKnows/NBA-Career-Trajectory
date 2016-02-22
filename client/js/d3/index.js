@@ -3,17 +3,12 @@ import { TEAM_COLORS } from './constants'
 import _ from 'lodash'
 import moment from 'moment'
 
-console.log(TEAM_COLORS)
-
-//const formatting = {
-//    season : formatStatsBySeason,
-//    age : formatStatsByAge
-//}
-const WIDTH = 1000;
+let reduxActions;
+const WIDTH = 800;
 const HEIGHT = 500;
 const MARGINS = {
     top: 20,
-    right: 20,
+    right: 30,
     bottom: 20,
     left: 50
 };
@@ -32,8 +27,9 @@ let yAxis = d3.svg.axis()
     .scale(yScale)
     .orient("left");
 
-export function init() {
+export function init(actions) {
     const viz = d3.select('#viz');
+    reduxActions = actions;
 
     viz.append("svg:g")
         .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
@@ -70,25 +66,20 @@ export function update(playerStats, format, category) {
         return d3.min(player.seasons, (season) => season[format]);
     });
 
-
     let domain;
     if (format === 'year') {
-        //1990-91
-        //2005-2006
         let year = minFormat;
         domain = [minFormat];
-        console.log(minFormat, maxFormat)
+
         while (year !== maxFormat) {
             const nextYear = moment([year.substring(0, 4)]).add(1, 'year');
             const nextNextYear = moment([year.substring(0, 4)]).add(2, 'year');
-            const newYear = nextYear.format('YYYY')+ '-' + nextNextYear.format('YY');
+            const newYear = nextYear.format('YYYY') + '-' + nextNextYear.format('YY');
             year = newYear;
             domain.push(newYear);
         }
-        //console.log(domain)
     } else {
         domain = _.range(minFormat, maxFormat + 1);
-
     }
 
     // Scaling
@@ -115,12 +106,27 @@ export function update(playerStats, format, category) {
             .call(xAxis)
             .selectAll("text")
             .attr("dy", ".35em")
-            .attr("transform", "rotate(45)")
+            .attr("transform", (d) => {
+                console.log(format, domain.length)
+                if (format === 'year' && domain.length > 12) {
+                    return "rotate(50)" + " translate(30," + 0 + ")";
+                } else {
+                    return "rotate(0)" + " translate(0," + 10 + ")";
+                }
+            })
+            //.attr("transform", (d) => {
+            //    if (format === 'year' && domain.length > 12) {
+            //        return "translate(0," + 10 + ")"
+            //    } else {
+            //        return "translate(0, 0)";
+            //    }
+            //});
+
+
 
         viz.selectAll("g.y.axis")
             .transition().delay(100).duration(1000)
             .call(yAxis);
-
     }
 
     // Draw Paths
@@ -135,24 +141,43 @@ export function update(playerStats, format, category) {
         .attr('d', (d) => {
             return lineGen(d.seasons)
         })
-        .attr("stroke-dasharray", () => {});
+        .attr("stroke-dasharray", () => {
+        });
 
     const playersEnter = players.enter()
         .append("g")
         .attr("class", "player");
 
     const path = playersEnter.append("path")
-        .attr('d', (d) => {
-            return lineGen(d.seasons)
-        })
+        .attr('d', (d) => lineGen(d.seasons))
         .attr("class", "line")
         .style("stroke", (d) => {
             let counts = (_.countBy(d.seasons, (season) => season.team));
-            return TEAM_COLORS[Object.keys(counts).reduce(function(a, b){ return counts[a] > counts[b] ? a : b })];
+            return TEAM_COLORS[Object.keys(counts).reduce((a, b) =>counts[a] > counts[b] ? a : b)];
         })
-        .attr('stroke-width', 3)
-        .attr('fill', 'none');
+        .attr('stroke-width', 6.5)
+        .attr('fill', 'none')
+        .on("mouseover", (player) => {
+            const { id, name } = player;
 
+            reduxActions.setHoveringPlayer({id, name});
+
+            d3.selectAll('.player')
+                .classed('notSelected', (p) =>  p.name !== name )
+            d3.selectAll('g.dot')
+                .classed('notSelected', (p) =>  p.name !== name )
+        })
+        .on("mouseout", (player) => {
+            reduxActions.setHoveringPlayer({});
+
+            d3.selectAll('.player')
+                .classed('notSelected', (b) => false )
+            d3.selectAll('g.dot')
+                .classed('notSelected', (player) =>  false )
+        })
+
+
+            //animate line drawing
     if (path.node()) {
         const totalLength = path.node().getTotalLength();
 
@@ -170,40 +195,49 @@ export function update(playerStats, format, category) {
     const dots = viz.selectAll("g.dot")
         .data(data, (d) => d.id);
 
-    dots.exit().remove();
-
     const dotsEnter = dots.enter()
         .append("g")
         .attr("class", "dot")
         .selectAll("circle")
         .data((d) => d.seasons, (d, i) => d.id + ' ' + i)
 
-    //console.log('entering ', dotsEnter);
-    //console.log(viz.selectAll("g.dot circle"));
+    dots.exit().remove();
 
     dotsEnter
         .enter().append("circle")
-        .attr("r", 4)
+        .attr("r", 7)
         .attr("fill", (d) => TEAM_COLORS[d.team])
         .style("stroke", (d) => TEAM_COLORS[d.team])
-        .transition().duration(10000)
         .attr("cx", (d, i) => xScale(d[format]))
-        .attr("cy", (d, i) => yScale(d.stat));
+        .attr("cy", (d, i) => yScale(d.stat))
+        .on("mouseover", (player) => {
+            const { id, name } = player;
 
-    console.log(viz.selectAll("g.dot"));
-    console.log(viz.selectAll("g.dot circle"));
-    console.log(viz.selectAll("g.dot").selectAll("circle").data((d) => {
-        console.log(d)
+            reduxActions.setHoveringPlayer({id, name, stats: player});
+
+            d3.selectAll('.player')
+                .classed('notSelected', (p) =>  p.name !== name )
+            d3.selectAll('g.dot')
+                .classed('notSelected', (p) =>  p.name !== name )
+        })
+        .on("mouseout", (player) => {
+            reduxActions.setHoveringPlayer({});
+
+            d3.selectAll('.player')
+                .classed('notSelected', (b) => false )
+            d3.selectAll('g.dot')
+                .classed('notSelected', (player) =>  false )
+        })
+
+
+    const realDots = viz.selectAll("g.dot").selectAll("circle").data((d) => {
         return d.seasons;
-    }));
+    });
 
     viz.selectAll("g.dot circle")
         .transition().duration(1000)
-        .attr("cx", (d, i) => {
-            return xScale(d[format])
-        })
+        .attr("cx", (d, i) => xScale(d[format]))
         .attr("cy", (d, i) => yScale(d.stat));
-
 }
 
 

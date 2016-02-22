@@ -80,7 +80,10 @@ export const TEAM_COLORS = {
     UTH: '#002B5C',
     WAS: '#E31937',
     NOJ: '#002B5C',
-    CHH: '#008CA8'
+    CHH: '#008CA8',
+    NOK: '#008CA8',
+    SEA: '#016332',
+    STL: '#E03A3E'
 }
 
 const map = new Map();
