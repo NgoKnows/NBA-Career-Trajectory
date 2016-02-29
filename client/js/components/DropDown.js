@@ -18,15 +18,18 @@ class DropDown extends Component {
 
         return (
             <div style={STYLES.container}>
-                <div style={STYLES.select}>
-                    <Select
-                        name="form-field-name"
-                        value={category}
-                        options={options}
-                        onChange={(option) => actions.setCategory(option.value)}
-                        searchable={false}
-                        clearable={false}
-                    />
+                <div style={STYLES.selectContainer}>
+                    <div style={STYLES.category}>Category: </div>
+                    <div style={STYLES.select}>
+                        <Select
+                            name="form-field-name"
+                            value={category}
+                            options={options}
+                            onChange={(option) => actions.setCategory(option.value)}
+                            searchable={false}
+                            clearable={false}
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -40,7 +43,18 @@ const STYLES = {
     },
 
     select: {
-        width: '200px'
+        width: '250px'
+    },
+
+    selectContainer: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+
+    category: {
+        fontWeight: 'bold',
+        marginRight: '10px',
+        fontSize: '20px'
     }
 };
 

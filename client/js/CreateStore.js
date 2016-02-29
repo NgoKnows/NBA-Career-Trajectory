@@ -10,11 +10,11 @@ export default function composeStore() {
 
     //always use thunk middleware
     let middleware = [applyMiddleware(thunk)];
-    //
-    ////devtools only in development
-    //if (process.env.NODE_ENV !== 'production') {
-    //    middleware.push(DevTools.instrument());
-    //}
+
+    //devtools only in development
+    if (process.env.NODE_ENV !== 'production') {
+        middleware.push(DevTools.instrument());
+    }
 
     const finalCreateStore = compose(...middleware)(createStore);
 

@@ -46,6 +46,7 @@ class Profile extends Component {
 const STYLES = {
     container: {
         display: 'flex',
+        marginTop: '25px',
         justifyContent: 'center'
     },
 

@@ -7,7 +7,7 @@ export function formatStats(player, category) {
     console.log(stats);
 
     let prevSeason;
-    let season = 0;
+    let season = 1;
     let offset = 0;
     for (let i = 0; i < stats.length; i++) {
         let stat;

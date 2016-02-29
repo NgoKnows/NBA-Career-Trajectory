@@ -19,7 +19,7 @@ export function init(actions) {
 
     // Beginning Scaling
     // --------------------------------------------------
-    const xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 10]);
+    const xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([1, 10]);
     const yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 10000]);
 
    // Draw Axis

@@ -104,7 +104,7 @@ const STYLES = {
     container: {
         display       : 'flex',
         flexDirection : 'column',
-        alignItems    : 'center',
+        alignItems    : 'flex-end',
     }
 };
 
